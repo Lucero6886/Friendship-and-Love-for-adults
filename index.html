@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaking Mastery: Friendship & Love</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #E11D48; /* Rose 600 */
+            --secondary: #2563EB; /* Blue 600 */
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --text-dark: #0F172A;
+            --text-gray: #64748B;
+            --border: #E2E8F0;
+            --success: #10B981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            line-height: 1.7;
+            font-size: 1.4rem; /* Large font for adults */
+            padding-bottom: 100px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+        /* Header & Progress Bar */
+        header {
+            background: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+            border-radius: 0 0 40px 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        h1 { font-size: 4rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 10px; }
+        .p-badge { background: #FFE4E6; color: var(--primary); padding: 5px 15px; border-radius: 99px; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; }
+
+        #progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 8px; background: #E2E8F0; z-index: 1000; }
+        #progress-bar { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s; }
+
+        /* Section Styling */
+        section { margin-bottom: 60px; }
+        .section-header { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+        .num { background: var(--text-dark); color: white; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        h2 { font-size: 2.2rem; font-weight: 800; }
+
+        .card {
+            background: var(--card);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        .btn-reveal {
+            background: var(--bg);
+            border: 2px dashed var(--border);
+            color: var(--secondary);
+            padding: 15px 30px;
+            border-radius: 18px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: left;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-reveal:hover { border-color: var(--secondary); background: #EFF6FF; }
+
+        .hidden-content { display: none; padding: 20px; background: #F1F5F9; border-radius: 20px; margin-top: 15px; animation: slideIn 0.4s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Vocab Grid */
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .vocab-card { border: 2px solid var(--border); border-radius: 24px; padding: 30px; transition: 0.3s; }
+        .vocab-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .word { font-size: 2rem; font-weight: 800; color: var(--primary); }
+        .ipa { font-size: 1.1rem; color: var(--text-gray); font-family: 'Arial', sans-serif; font-style: italic; }
+
+        /* Speaking Questions */
+        .question-box { border-left: 8px solid var(--secondary); margin-bottom: 30px; }
+        .q-text { font-size: 1.6rem; font-weight: 700; margin-bottom: 10px; color: var(--text-dark); }
+        .diff-tag { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; padding: 2px 10px; border-radius: 6px; }
+        .easy { background: #D1FAE5; color: #065F46; }
+        .medium { background: #FEF3C7; color: #92400E; }
+        .opinion { background: #DBEAFE; color: #1E40AF; }
+
+        /* Fluency Flashcards */
+        .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .flashcard {
+            background: white; border: 2px solid var(--border); padding: 25px; border-radius: 20px;
+            text-align: center; cursor: pointer; font-weight: 700; transition: 0.3s; height: 120px; display: flex; align-items: center; justify-content: center;
+        }
+        .flashcard:hover { border-color: var(--primary); background: #FFF1F2; }
+
+        /* Review Game */
+        .review-box { display: flex; flex-direction: column; gap: 15px; }
+        .match-item { display: flex; gap: 15px; align-items: center; }
+        select { padding: 12px; border-radius: 12px; border: 2px solid var(--border); font-size: 1.1rem; flex: 1; outline: none; }
+        select.correct { border-color: var(--success); background: #D1FAE5; }
+
+        /* Reflection */
+        .reflect-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-radius: 15px; cursor: pointer; }
+        .reflect-item:hover { background: #f8fafc; }
+        input[type="checkbox"] { width: 25px; height: 25px; accent-color: var(--primary); cursor: pointer; }
+
+        footer { text-align: center; padding: 40px; color: var(--text-gray); font-size: 1rem; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .card { padding: 20px; }
+            h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="progress-container"><div id="progress-bar"></div></div>
+
+    <header>
+        <span class="p-badge">Adult Speaking Lesson</span>
+        <h1>Friendship & Love ❤️</h1>
+        <p style="color: var(--text-gray); font-size: 1.5rem; font-weight: 500;">Navigating human connections through English</p>
+    </header>
+
+    <div class="container">
+
+        <!-- OBJECTIVES -->
+        <section class="card" style="border-left: 10px solid var(--primary); padding: 30px;">
+            <h3 style="font-weight: 800; margin-bottom: 10px;">Learning Objectives</h3>
+            <ul style="padding-left: 25px; font-weight: 500;">
+                <li>Acquire advanced vocabulary to describe deep relationships.</li>
+                <li>Discuss complex relationship dynamics with structural idea support.</li>
+                <li>Critique and express opinions on modern dating and love trends.</li>
+            </ul>
+        </section>
+
+        <!-- 1. WARM-UP -->
+        <section id="s1">
+            <div class="section-header"><div class="num">1</div><h2>Warm-up</h2></div>
+            <div class="card">
+                <p style="margin-bottom: 20px; font-weight: 600;">Answer these questions with your partner or yourself:</p>
+                
+                <div>
+                    <p>1. What makes someone a "true" friend? 🤝</p>
+                    <button class="btn-reveal" onclick="toggle('w1')">Show Example Answer <span>▼</span></button>
+                    <div id="w1" class="hidden-content">"In my view, a true friend is someone who stays by your side through thick and thin, offering support without judgment."</div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <p>2. Do you believe in love at first sight? ✨</p>
+                    <button class="btn-reveal" onclick="toggle('w2')">Show Example Answer <span>▼</span></button>
+                    <div id="w2" class="hidden-content">"To be honest, I think it's usually just an initial infatuation. True love takes time to develop as you get to know a person's character."</div>
+                </div>
+                <!-- 3 more questions -->
+                <div style="margin-top: 30px;">
+                    <p>3. Is it easier to make friends as a child or an adult? 👶/🧔</p>
+                    <button class="btn-reveal" onclick="toggle('w3')">Show Example Answer <span>▼</span></button>
+                    <div id="w3" class="hidden-content">"As an adult, it's more challenging because we have more responsibilities and are often more cautious about who we trust."</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. VOCABULARY -->
+        <section id="s2">
+            <div class="section-header"><div class="num">2</div><h2>Vocabulary Hub</h2></div>
+            <div class="vocab-grid">
+                <!-- Word 1 -->
+                <div class="vocab-card">
+                    <p class="word">Soulmate</p>
+                    <p class="ipa">/ˈsoʊlmeɪt/</p>
+                    <p style="font-size: 1.1rem; color: var(--text-gray);">Someone perfectly suited to another person.</p>
+                    <button class="btn-reveal" onclick="toggle('v1')">Show Example <span>▼</span></button>
+                    <div id="v1" class="hidden-content">"Many people spend their entire lives searching for their <strong>soulmate</strong>."</div>
+                </div>
+                <!-- Word 2 -->
+                <div class="vocab-card">
+                    <p class="word">Confidant</p>
+                    <p class="ipa">/ˈkɑːnfɪdænt/</p>
+                    <p style="font-size: 1.1rem; color: var(--text-gray);">A person you trust with your private secrets.</p>
+                    <button class="btn-reveal" onclick="toggle('v2')">Show Example <span>▼</span></button>
+                    <div id="v2" class="hidden-content">"My sister has always been my closest <strong>confidant</strong>."</div>
+                </div>
+                <!-- Word 3 -->
+                <div class="vocab-card">
+                    <p class="word">Acquaintance</p>
+                    <p class="ipa">/əˈkweɪntəns/</p>
+                    <p style="font-size: 1.1rem; color: var(--text-gray);">Someone you know slightly, but not a close friend.</p>
+                    <button class="btn-reveal" onclick="toggle('v3')">Show Example <span>▼</span></button>
+                    <div id="v3" class="hidden-content">"He is just a business <strong>acquaintance</strong> I met at a conference."</div>
+                </div>
+                <!-- Word 4 -->
+                <div class="vocab-card">
+                    <p class="word">Amiable</p>
+                    <p class="ipa">/ˈeɪmiəbl/</p>
+                    <p style="font-size: 1.1rem; color: var(--text-gray);">Friendly, pleasant, and easy to like.</p>
+                    <button class="btn-reveal" onclick="toggle('v4')">Show Example <span>▼</span></button>
+                    <div id="v4" class="hidden-content">"The meeting was very <strong>amiable</strong>, and we reached an agreement quickly."</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3-5. SPEAKING PRACTICE, IDEA BANK, SAMPLE ANSWERS -->
+        <section id="s3">
+            <div class="section-header"><div class="num">3</div><h2>Main Speaking Practice</h2></div>
+            
+            <!-- Question 1 -->
+            <div class="card question-box">
+                <span class="diff-tag easy">Easy</span>
+                <p class="q-text">1. How did you meet your best friend?</p>
+                
+                <button class="btn-reveal" style="color: var(--text-dark); background: #FFF;" onclick="toggle('i1')">💡 Idea Bank <span>▼</span></button>
+                <div id="i1" class="hidden-content" style="background: white; border: 1px solid #ddd;">
+                    • Met at school/university<br>• Through a mutual friend<br>• At a previous job<br>• Shared hobby or club
+                </div>
+
+                <button class="btn-reveal" style="color: var(--success); border-color: var(--success);" onclick="toggle('sa1')">💬 Sample Answers <span>▼</span></button>
+                <div id="sa1" class="hidden-content">
+                    <p><strong>Short:</strong> "We met at university while we were both studying for our final exams in the library."</p>
+                    <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ddd;">
+                    <p><strong>Extended:</strong> "Actually, it's quite a funny story. We met through a mutual friend at a birthday party ten years ago. We immediately bonded over our shared love for jazz music and have been inseparable ever since."</p>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="card question-box">
+                <span class="diff-tag medium">Medium</span>
+                <p class="q-text">5. Is it easy to make friends as an adult?</p>
+                
+                <button class="btn-reveal" style="color: var(--text-dark); background: #FFF;" onclick="toggle('i5')">💡 Idea Bank <span>▼</span></button>
+                <div id="i5" class="hidden-content" style="background: white; border: 1px solid #ddd;">
+                    • Harder due to work-life balance<br>• People are more cautious<br>• Less opportunities than school<br>• Social media helps
+                </div>
+
+                <button class="btn-reveal" style="color: var(--success); border-color: var(--success);" onclick="toggle('sa5')">💬 Sample Answers <span>▼</span></button>
+                <div id="sa5" class="hidden-content">
+                    <p><strong>Short:</strong> "In my opinion, it's much harder because most adults are busy with their careers and families."</p>
+                    <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ddd;">
+                    <p><strong>Extended:</strong> "From my perspective, it’s significantly more difficult. When we were younger, school provided a natural environment for social interaction. As adults, we have to be more proactive, like joining clubs or networking events, to meet like-minded people."</p>
+                </div>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="card question-box">
+                <span class="diff-tag opinion">Opinion</span>
+                <p class="q-text">8. Can men and women be "just friends"?</p>
+                
+                <button class="btn-reveal" style="color: var(--text-dark); background: #FFF;" onclick="toggle('i8')">💡 Idea Bank <span>▼</span></button>
+                <div id="i8" class="hidden-content" style="background: white; border: 1px solid #ddd;">
+                    • Depends on boundaries<br>• Platonic love is real<br>• Society's outdated view<br>• Risk of unrequited feelings
+                </div>
+
+                <button class="btn-reveal" style="color: var(--success); border-color: var(--success);" onclick="toggle('sa8')">💬 Sample Answers <span>▼</span></button>
+                <div id="sa8" class="hidden-content">
+                    <p><strong>Short:</strong> "Yes, I believe platonic relationships are totally possible as long as there is respect."</p>
+                    <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ddd;">
+                    <p><strong>Extended:</strong> "I’m of the mind that they can, though it requires maturity. I have several close friends of the opposite gender, and our bond is purely intellectual and emotional. However, the key is having clear boundaries from the very beginning."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. ROLE-PLAY -->
+        <section id="s6">
+            <div class="section-header"><div class="num">6</div><h2>Real-life Role-play</h2></div>
+            <div class="card" style="background: #0F172A; color: white;">
+                <h3 style="color: #38BDF8; margin-bottom: 10px;">Scenario: Reconnecting with an old friend</h3>
+                <p style="margin-bottom: 25px;">You haven't spoken to a close friend in 2 years after a small argument. You meet at a cafe to "bury the hatchet" (make peace).</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: #1E293B; padding: 20px; border-radius: 15px;">
+                        <strong style="color: #38BDF8;">Student A (Initiator)</strong><br>
+                        Start the conversation. Express that you missed the friendship.
+                    </div>
+                    <div style="background: #1E293B; padding: 20px; border-radius: 15px;">
+                        <strong style="color: #38BDF8;">Student B (Cautious)</strong><br>
+                        Be a bit guarded but willing to listen. Ask how their life has been.
+                    </div>
+                </div>
+
+                <button class="btn-reveal" style="background: transparent; border-color: #334155; color: #94A3B8;" onclick="toggle('rph1')">Get Dialogue Hints <span>▼</span></button>
+                <div id="rph1" class="hidden-content" style="background: #1E293B; color: #D1D5DB;">
+                    • "It’s been a while, hasn't it?"<br>
+                    • "I’ve been doing a lot of thinking lately..."<br>
+                    • "I really value our bond and I'm sorry about..."<br>
+                    • "How's your family/work been going?"
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. FLUENCY BUILDER -->
+        <section id="s7">
+            <div class="section-header"><div class="num">7</div><h2>Fluency Builder</h2></div>
+            <p style="margin-bottom: 20px; color: var(--text-gray);">Tap the starters to see a potential sentence completion.</p>
+            <div class="flashcard-grid">
+                <div class="flashcard" onclick="revealFluency(this, 'I usually prefer close friends because...')">I usually...</div>
+                <div class="flashcard" onclick="revealFluency(this, 'In my opinion, dating apps are...')">In my opinion...</div>
+                <div class="flashcard" onclick="revealFluency(this, 'One reason for this is...')">One reason is...</div>
+                <div class="flashcard" onclick="revealFluency(this, 'For example, my best friend always...')">For example...</div>
+                <div class="flashcard" onclick="revealFluency(this, 'To be perfectly honest...')">To be honest...</div>
+                <div class="flashcard" onclick="revealFluency(this, 'As far as I am concerned...')">As far as I'm concerned...</div>
+            </div>
+        </section>
+
+        <!-- 8. REVIEW GAME -->
+        <section id="s8">
+            <div class="section-header"><div class="num">8</div><h2>Review Game</h2></div>
+            <div class="card review-box">
+                <p>Match the situation to the correct vocabulary term:</p>
+                <div class="match-item">
+                    <span>1. Someone you only know from work.</span>
+                    <select onchange="checkMatch(this, 'acq')">
+                        <option value="">Choose...</option>
+                        <option value="soul">Soulmate</option>
+                        <option value="acq">Acquaintance</option>
+                        <option value="con">Confidant</option>
+                    </select>
+                </div>
+                <div class="match-item">
+                    <span>2. The person who knows all your secrets.</span>
+                    <select onchange="checkMatch(this, 'con')">
+                        <option value="">Choose...</option>
+                        <option value="soul">Soulmate</option>
+                        <option value="acq">Acquaintance</option>
+                        <option value="con">Confidant</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. REFLECTION -->
+        <section id="s9">
+            <div class="section-header"><div class="num">9</div><h2>Reflection</h2></div>
+            <div class="card">
+                <label class="reflect-item"><input type="checkbox" onclick="addProgress()"> Was I confident while speaking today?</label>
+                <label class="reflect-item"><input type="checkbox" onclick="addProgress()"> Did I use at least 3 new vocabulary words?</label>
+                <label class="reflect-item"><input type="checkbox" onclick="addProgress()"> Did I speak clearly with proper intonation?</label>
+                <label class="reflect-item"><input type="checkbox" onclick="addProgress()"> Did I use sentence starters to expand my ideas?</label>
+                <label class="reflect-item"><input type="checkbox" onclick="addProgress()"> Do I feel ready to talk about this in real life?</label>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        &copy; 2026 ESL Professional Instructional Design | Language Learning Redefined
+    </footer>
+
+    <script>
+        function toggle(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function revealFluency(el, text) {
+            if (el.innerText.includes('...')) {
+                el.innerText = text;
+                el.style.backgroundColor = "#F1F5F9";
+                el.style.fontSize = "1rem";
+            } else {
+                el.innerText = text.split(',')[0] + "...";
+                el.style.backgroundColor = "white";
+                el.style.fontSize = "1.4rem";
+            }
+        }
+
+        function checkMatch(select, correct) {
+            if (select.value === correct) {
+                select.classList.add('correct');
+            } else {
+                select.classList.remove('correct');
+            }
+        }
+
+        let progress = 0;
+        function addProgress() {
+            const checks = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            const total = document.querySelectorAll('input[type="checkbox"]').length;
+            const bar = document.getElementById('progress-bar');
+            bar.style.width = (checks / total * 100) + "%";
+        }
+
+        // Section intersection for progress bar (optional enhancement)
+        window.addEventListener('scroll', () => {
+            const scroll = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scroll / docHeight) * 100;
+            if (document.querySelectorAll('input[type="checkbox"]:checked').length === 0) {
+                document.getElementById('progress-bar').style.width = scrollPercent + "%";
+            }
+        });
+    </script>
+
+</body>
+</html>
