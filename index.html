@@ -17,6 +17,7 @@
             --border: #E2E8F0;
             --success: #10B981;
             --accent: #F59E0B;
+            --error: #EF4444;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -86,26 +87,41 @@
         .badge-opinion { background: #DBEAFE; color: #1E40AF; }
 
         /* Roleplay */
-        .role-card { background: #1E293B; color: #F1F5F9; padding: 30px; border-radius: 25px; border-top: 5px solid var(--accent); }
+        .role-card { background: #1E293B; color: #F1F5F9; padding: 30px; border-radius: 25px; border-top: 5px solid var(--accent); height: 100%; }
         .role-title { color: var(--accent); font-weight: 900; text-transform: uppercase; margin-bottom: 15px; display: block; }
 
-        /* Fluency Builder */
-        .flash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        /* Fluency Builder - Fixed Display with Dynamic Space */
+        .flash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; perspective: 1000px; }
         .flash-card {
-            background: white; border: 3px solid var(--border); border-radius: 30px;
-            padding: 35px; cursor: pointer; text-align: center; height: 160px;
-            display: flex; flex-direction: column; justify-content: center; transition: 0.3s;
+            min-height: 280px; /* Increased height for long examples */
+            cursor: pointer; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .flash-card:hover { border-color: var(--secondary); background: #F0F9FF; }
-        .flash-card.active { border-color: var(--primary); background: #FFF1F2; border-style: dashed; }
-        .flash-text { font-weight: 800; color: var(--secondary); }
-        .flash-card.active .flash-text { color: var(--text-muted); font-weight: 500; font-size: 1.1rem; }
+        .flash-card.active { transform: rotateY(180deg); }
+        .flash-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; align-items: center; justify-content: center; padding: 25px;
+            border-radius: 35px; border: 3px solid var(--border); text-align: center;
+        }
+        .flash-front { background: white; color: var(--secondary); font-weight: 800; font-size: 1.5rem; }
+        .flash-back { background: #FFF1F2; color: var(--text-muted); font-size: 1.15rem; transform: rotateY(180deg); border-color: var(--primary); font-style: italic; }
 
-        /* Review Game */
-        .game-row { display: flex; gap: 25px; align-items: center; margin-bottom: 20px; }
+        /* Review Game - Feedback Effects */
+        .game-row { display: flex; gap: 25px; align-items: center; margin-bottom: 25px; padding: 20px; border-radius: 20px; background: #f8fafc; transition: 0.3s; }
         .game-q { flex: 1; font-weight: 600; font-size: 1.3rem; }
-        .game-select { padding: 15px; border-radius: 15px; border: 2px solid var(--border); font-size: 1.2rem; width: 300px; outline: none; }
-        .game-select.correct { border-color: var(--success); background: #D1FAE5; }
+        .game-select { 
+            padding: 15px; border-radius: 15px; border: 2px solid var(--border); 
+            font-size: 1.2rem; width: 320px; outline: none; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .correct-select { border-color: var(--success) !important; background: #D1FAE5 !important; color: #065F46 !important; }
+        .wrong-select { border-color: var(--error) !important; background: #FEE2E2 !important; color: #991B1B !important; animation: shake 0.4s ease; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
 
         /* Reflection */
         .check-item { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; cursor: pointer; padding: 15px; border-radius: 20px; }
@@ -152,7 +168,7 @@
             <h2>Warm-up Questions 🔥</h2>
             <div class="card">
                 <div class="item">
-                    <p style="font-weight: 700;">1. What is the most important quality in a lifelong friend? 🤝</p>
+                    <p style="font-weight: 700;">1. What defines a "true" friend in your opinion? 🤝</p>
                     <button class="btn-reveal" onclick="toggle('w1')">Show Perspective <span>▼</span></button>
                     <div id="w1" class="hidden-content">"In my opinion, consistency is key. A true friend isn't just someone who shares your interests, but someone who remains supportive through every phase of your life."</div>
                 </div>
@@ -207,145 +223,92 @@
             </div>
         </section>
 
-        <!-- 3. MAIN SPEAKING CHALLENGE -->
+        <!-- 3. MAIN SPEAKING CHALLENGE (1-10 ORDERED) -->
         <section id="s3">
             <div class="section-num">3</div>
             <h2>Main Speaking Challenge 🎤</h2>
-            <p style="margin-bottom: 50px; color: var(--text-muted); font-style: italic;">Progress from basic descriptions to complex argumentation.</p>
+            <p style="margin-bottom: 50px; color: var(--text-muted); font-style: italic;">A structured progression from personal stories to critical analysis.</p>
 
-            <!-- Q1-Q3 EASY -->
             <div class="card q-box">
-                <span class="badge badge-easy">Level: Easy</span>
-                <p class="q-text">1. How did you meet your best friend?</p>
+                <span class="badge badge-easy">Question 01</span>
+                <p class="q-text">How did you meet your best friend?</p>
                 <div style="display: flex; gap: 15px;">
-                    <button class="btn-reveal" style="flex: 1;" onclick="toggle('i1')">💡 Idea Bank</button>
-                    <button class="btn-reveal" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa1')">🎙️ Sample Answers</button>
+                    <button class="btn-reveal" style="flex: 1;" onclick="toggle('i1')">💡 Ideas</button>
+                    <button class="btn-reveal" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa1')">🎙️ Samples</button>
                 </div>
-                <div id="i1" class="hidden-content">• Met at university or workplace<br>• Through a mutual acquaintance<br>• Shared hobby or social club</div>
-                <div id="sa1" class="hidden-content">
-                    <p><strong>Short:</strong> "We met at university while working on a stressful group project five years ago."</p>
-                    <hr style="margin: 15px 0;">
-                    <p><strong>Extended:</strong> "Actually, it's a funny story. We met through a mutual friend at a coffee shop. We immediately bonded over our shared passion for architectural design and have been inseparable ever since."</p>
-                </div>
+                <div id="i1" class="hidden-content">• University/School/Work<br>• Mutual friend introduction<br>• Online hobby group</div>
+                <div id="sa1" class="hidden-content">"We met at university while working on a stressful group project five years ago. We bonded over our shared passion for architectural design."</div>
             </div>
 
             <div class="card q-box">
-                <span class="badge badge-easy">Level: Easy</span>
-                <p class="q-text">2. What specific qualities do you value in a partner?</p>
+                <span class="badge badge-easy">Question 02</span>
+                <p class="q-text">What specific qualities do you value in a partner or spouse?</p>
                 <div style="display: flex; gap: 15px;">
-                    <button class="btn-reveal" style="flex: 1;" onclick="toggle('i2')">💡 Idea Bank</button>
-                    <button class="btn-reveal" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa2')">🎙️ Sample Answers</button>
+                    <button class="btn-reveal" style="flex: 1;" onclick="toggle('i2')">💡 Ideas</button>
+                    <button class="btn-reveal" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa2')">🎙️ Samples</button>
                 </div>
-                <div id="i2" class="hidden-content">• Honesty and transparency<br>• Emotional intelligence<br>• Ambition and drive</div>
-                <div id="sa2" class="hidden-content">
-                    <p><strong>Extended:</strong> "Above all else, I value honesty. I believe a strong relationship cannot exist without transparency. Additionally, having a similar sense of humor makes the bond much more enjoyable."</p>
-                </div>
+                <div id="i2" class="hidden-content">• Honesty and transparency<br>• Ambition/Goals<br>• Emotional intelligence</div>
+                <div id="sa2" class="hidden-content">"I value honesty above all. I believe a strong relationship cannot exist without complete transparency and mutual respect."</div>
             </div>
 
             <div class="card q-box">
-                <span class="badge badge-easy">Level: Easy</span>
-                <p class="q-text">3. Do you prefer having many acquaintances or a few close friends?</p>
+                <span class="badge badge-easy">Question 03</span>
+                <p class="q-text">Do you prefer many acquaintances or just a few close friends?</p>
                 <div style="display: flex; gap: 15px;">
-                    <button class="btn-reveal" style="flex: 1;" onclick="toggle('i3')">💡 Idea Bank</button>
-                    <button class="btn-reveal" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa3')">🎙️ Sample Answers</button>
+                    <button class="btn-reveal" style="flex: 1;" onclick="toggle('i3')">💡 Ideas</button>
+                    <button class="btn-reveal" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa3')">🎙️ Samples</button>
                 </div>
-                <div id="i3" class="hidden-content">• Quality over quantity<br>• Emotional depth<br>• Social energy levels</div>
-                <div id="sa3" class="hidden-content">
-                    <p><strong>Extended:</strong> "I definitely prioritize quality over quantity. I find that having a small circle of trusted friends allows for deeper emotional support, whereas having too many acquaintances can be socially draining."</p>
-                </div>
-            </div>
-
-            <!-- Q4-Q7 MEDIUM -->
-            <div class="card q-box" style="border-left-color: var(--accent);">
-                <span class="badge badge-medium">Level: Medium</span>
-                <p class="q-text">4. Why is it harder to form new friendships as an adult?</p>
-                <div style="display: flex; gap: 15px;">
-                    <button class="btn-reveal" style="flex: 1;" onclick="toggle('i4')">💡 Idea Bank</button>
-                    <button class="btn-reveal" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa4')">🎙️ Sample Answers</button>
-                </div>
-                <div id="i4" class="hidden-content">• Professional/Family obligations<br>• Guarded nature/Cynicism<br>• Lack of shared social environments</div>
-                <div id="sa4" class="hidden-content">
-                    <p><strong>Extended:</strong> "From my perspective, time is the biggest barrier. As adults, we are preoccupied with our careers and families. Unlike school, where socializing was built into the schedule, we now have to be very proactive to meet new people."</p>
-                </div>
+                <div id="i3" class="hidden-content">• Depth vs Quantity<br>• Social energy management<br>• Depth of support</div>
+                <div id="sa3" class="hidden-content">"I definitely prioritize quality over quantity. A small circle of trusted friends provides much deeper emotional support than a large group of acquaintances."</div>
             </div>
 
             <div class="card q-box" style="border-left-color: var(--accent);">
-                <span class="badge badge-medium">Level: Medium</span>
-                <p class="q-text">5. How has technology impacted the way we find love?</p>
-                <div style="display: flex; gap: 15px;">
-                    <button class="btn-reveal" style="flex: 1;" onclick="toggle('i5')">💡 Idea Bank</button>
-                    <button class="btn-reveal" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa5')">🎙️ Sample Answers</button>
-                </div>
-                <div id="i5" class="hidden-content">• Accessibility and variety<br>• Superficiality/Paradox of choice<br>• Efficiency for busy professionals</div>
-                <div id="sa5" class="hidden-content">
-                    <p><strong>Extended:</strong> "It's a double-edged sword. While apps make meeting people easier, they often lead to a 'paradox of choice'. When we have endless options, we tend to treat people as disposable rather than investing time in building a real connection."</p>
-                </div>
+                <span class="badge badge-medium">Question 04</span>
+                <p class="q-text">Why is it harder to form new friendships as an adult?</p>
+                <button class="btn-reveal" onclick="toggle('sa4')">🎙️ Sample Answer <span>▼</span></button>
+                <div id="sa4" class="hidden-content">"Time is the biggest barrier. Between career and family, most adults simply lack the spontaneous social environments they had during their school years."</div>
             </div>
 
             <div class="card q-box" style="border-left-color: var(--accent);">
-                <span class="badge badge-medium">Level: Medium</span>
-                <p class="q-text">6. How do you maintain long-distance friendships?</p>
-                <div style="display: flex; gap: 15px;">
-                    <button class="reveal-btn" style="flex: 1;" onclick="toggle('i6')">💡 Idea Bank</button>
-                    <button class="reveal-btn" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa6')">🎙️ Sample Answers</button>
-                </div>
-                <div id="i6" class="hidden-content">• Scheduled video calls<br>• Sharing small daily updates<br>• Occasional travel to visit</div>
-                <div id="sa6" class="hidden-content">
-                    <p><strong>Extended:</strong> "I think consistency is vital. My best friend lives in London, so we make sure to have a dedicated video call once a month. We also share small daily updates via messaging apps to feel like we are still part of each other's lives."</p>
-                </div>
+                <span class="badge badge-medium">Question 05</span>
+                <p class="q-text">How has technology impacted the way we find love today?</p>
+                <button class="btn-reveal" onclick="toggle('sa5')">🎙️ Sample Answer <span>▼</span></button>
+                <div id="sa5" class="hidden-content">"Technology has created a 'paradox of choice'. While we meet more people, we often treat them as disposable, making it harder to build deep roots."</div>
             </div>
 
             <div class="card q-box" style="border-left-color: var(--accent);">
-                <span class="badge badge-medium">Level: Medium</span>
-                <p class="q-text">7. What is the best way to handle a serious argument?</p>
-                <div style="display: flex; gap: 15px;">
-                    <button class="reveal-btn" style="flex: 1;" onclick="toggle('i7')">💡 Idea Bank</button>
-                    <button class="reveal-btn" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa7')">🎙️ Sample Answers</button>
-                </div>
-                <div id="i7" class="hidden-content">• Cooling off period<br>• Active listening<br>• Avoiding blame language</div>
-                <div id="sa7" class="hidden-content">
-                    <p><strong>Extended:</strong> "To be honest, I prefer taking a short break before discussing the issue. When emotions are high, it's easy to say things we regret. Once we've cooled down, we can focus on active listening and finding a compromise."</p>
-                </div>
+                <span class="badge badge-medium">Question 06</span>
+                <p class="q-text">How do you maintain long-distance connections?</p>
+                <button class="btn-reveal" onclick="toggle('sa6')">🎙️ Sample Answer <span>▼</span></button>
+                <div id="sa6" class="hidden-content">"Consistency is vital. Regular video check-ins and small daily messages help us feel like we are still part of each other's daily lives."</div>
             </div>
 
-            <!-- Q8-Q10 OPINION -->
-            <div class="card q-box" style="border-left-color: var(--primary);">
-                <span class="badge badge-opinion">Level: Opinion</span>
-                <p class="q-text">8. Can men and women ever be "just friends"?</p>
-                <div style="display: flex; gap: 15px;">
-                    <button class="btn-reveal" style="flex: 1;" onclick="toggle('i8')">💡 Idea Bank</button>
-                    <button class="btn-reveal" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa8')">🎙️ Sample Answers</button>
-                </div>
-                <div id="i8" class="hidden-content">• Platonic bonds vs. Sexual tension<br>• Importance of boundaries<br>• Societal stereotypes</div>
-                <div id="sa8" class="hidden-content">
-                    <p><strong>Extended:</strong> "Generally speaking, I believe it's entirely possible, but it requires maturity. If both parties have clear boundaries and respect for each other's partners, a platonic friendship can be just as enriching as any other."</p>
-                </div>
+            <div class="card q-box" style="border-left-color: var(--accent);">
+                <span class="badge badge-medium">Question 07</span>
+                <p class="q-text">What is the best way to resolve a serious argument?</p>
+                <button class="btn-reveal" onclick="toggle('sa7')">🎙️ Sample Answer <span>▼</span></button>
+                <div id="sa7" class="hidden-content">"I believe in taking a short break before discussing the issue. Discussion should always start with active listening and empathy."</div>
             </div>
 
             <div class="card q-box" style="border-left-color: var(--primary);">
-                <span class="badge badge-opinion">Level: Opinion</span>
-                <p class="q-text">9. Is "unconditional love" a realistic concept for adults?</p>
-                <div style="display: flex; gap: 15px;">
-                    <button class="btn-reveal" style="flex: 1;" onclick="toggle('i9')">💡 Idea Bank</button>
-                    <button class="btn-reveal" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa9')">🎙️ Sample Answers</button>
-                </div>
-                <div id="i9" class="hidden-content">• Romanticizing expectations<br>• Healthy boundaries/deal-breakers<br>• Parent-child vs. Partner love</div>
-                <div id="sa9" class="hidden-content">
-                    <p><strong>Extended:</strong> "In my opinion, 'unconditional love' is more applicable to parents and children. In adult relationships, love should be conditional on mutual respect and safety. You shouldn't have to love someone regardless of how they treat you."</p>
-                </div>
+                <span class="badge badge-opinion">Question 08</span>
+                <p class="q-text">Can men and women ever be "just friends" without attraction?</p>
+                <button class="btn-reveal" onclick="toggle('sa8')">🎙️ Sample Answer <span>▼</span></button>
+                <div id="sa8" class="hidden-content">"Generally speaking, I believe it's entirely possible, but it requires maturity and clear boundaries from both parties."</div>
             </div>
 
             <div class="card q-box" style="border-left-color: var(--primary);">
-                <span class="badge badge-opinion">Level: Opinion</span>
-                <p class="q-text">10. Do soulmates really exist, or do we create them?</p>
-                <div style="display: flex; gap: 15px;">
-                    <button class="btn-reveal" style="flex: 1;" onclick="toggle('i10')">💡 Idea Bank</button>
-                    <button class="btn-reveal" style="flex: 1; color: var(--success); border-color: var(--success);" onclick="toggle('sa10')">🎙️ Sample Answers</button>
-                </div>
-                <div id="i10" class="hidden-content">• Fate vs. Personal effort<br>• The danger of high expectations<br>• Building compatibility over time</div>
-                <div id="sa10" class="hidden-content">
-                    <p><strong>Extended:</strong> "I’m of the mind that soulmates are built, not found. While you might have an initial spark with someone, the 'soulmate' status comes after years of compromise, shared hardship, and building a life together."</p>
-                </div>
+                <span class="badge badge-opinion">Question 09</span>
+                <p class="q-text">Is "unconditional love" a realistic concept in adult life?</p>
+                <button class="btn-reveal" onclick="toggle('sa9')">🎙️ Sample Answer <span>▼</span></button>
+                <div id="sa9" class="hidden-content">"In adult relationships, I think love should be conditional on respect and safety. You shouldn't have to love someone who treats you poorly."</div>
+            </div>
+
+            <div class="card q-box" style="border-left-color: var(--primary);">
+                <span class="badge badge-opinion">Question 10</span>
+                <p class="q-text">Do soulmates exist, or do we build them through effort?</p>
+                <button class="btn-reveal" onclick="toggle('sa10')">🎙️ Sample Answer <span>▼</span></button>
+                <div id="sa10" class="hidden-content">"I'm of the mind that soulmates are built, not found. The status comes after years of compromise and building a life together."</div>
             </div>
         </section>
 
@@ -354,102 +317,59 @@
             <div class="section-num">4</div>
             <h2>Real-life Speaking Scenarios 🎭</h2>
             
-            <!-- Scenario 1 -->
             <div class="card" style="background: #0F172A; color: white; border: none;">
                 <h3 style="color: #38BDF8; font-size: 2.2rem; margin-bottom: 25px;">Scenario A: Healing a Broken Friendship</h3>
-                <p style="margin-bottom: 30px; color: #94A3B8;"><strong>Context:</strong> You and your former best friend haven't spoken in 2 years after a major disagreement over a business project. One of you has reached out to meet at a quiet bar to 'bury the hatchet'.</p>
+                <p style="margin-bottom: 30px; color: #94A3B8;"><strong>Background:</strong> You and your former best friend haven't spoken in 3 years after a major disagreement. You meet at a quiet bar to 'bury the hatchet'.</p>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 30px;">
                     <div class="role-card">
                         <span class="role-title">Role A (The Initiator)</span>
-                        Goal: Apologize for your part in the conflict. Express that you missed the friendship more than the project.
+                        Goal: Apologize for your part in the conflict. Express how much you missed the connection. Emphasize that the friendship matters more.
                     </div>
                     <div class="role-card">
                         <span class="role-title">Role B (The Cautious)</span>
-                        Goal: Be honest about how hurt you were. Ask questions to see if the dynamic has actually changed.
+                        Goal: Acknowledge the apology but be honest about how hurt you were. Ask questions to see if the dynamic has actually changed.
                     </div>
                 </div>
 
-                <button class="btn-reveal" style="background: transparent; border-color: #334155; color: #94A3B8;" onclick="toggle('rp1')">Get Dialogue Starters <span>▼</span></button>
+                <button class="btn-reveal" style="background: transparent; border-color: #334155; color: #94A3B8;" onclick="toggle('rp1')">Dialogue Starters <span>▼</span></button>
                 <div id="rp1" class="hidden-content" style="background: #1E293B; color: #D1D5DB; border: 1px solid #334155;">
-                    • "It’s been quite a while, hasn't it? I’ve been doing a lot of thinking..."<br>
+                    • "It’s been quite a while, hasn't it? I’ve been doing a lot of thinking lately about us..."<br>
                     • "I’m sorry for how I handled things back then. I really value our bond."<br>
-                    • "To be honest, I was really hurt, but I’m glad you reached out. How have you been?"<br>
-                    • "I missed our long chats about everything and nothing."
-                </div>
-            </div>
-
-            <!-- Scenario 2 -->
-            <div class="card" style="background: #0F172A; color: white; border: none; margin-top: 40px;">
-                <h3 style="color: #38BDF8; font-size: 2.2rem; margin-bottom: 25px;">Scenario B: Setting Boundaries</h3>
-                <p style="margin-bottom: 30px; color: #94A3B8;"><strong>Context:</strong> A close friend has been asking for financial favors or too much professional help without compensation. You need to set a boundary to save the relationship.</p>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
-                    <div class="role-card" style="border-top-color: var(--primary);">
-                        <span class="role-title" style="color: var(--primary);">Role A (The Boundary Setter)</span>
-                        Goal: Use "I" statements. Be firm but amiable. Explain that you value the friend, not the favor.
-                    </div>
-                    <div class="role-card" style="border-top-color: var(--primary);">
-                        <span class="role-title" style="color: var(--primary);">Role B (The Unaware)</span>
-                        Goal: React with surprise. You didn't realize you were overstepping. Try to understand the new limit.
-                    </div>
-                </div>
-
-                <button class="btn-reveal" style="background: transparent; border-color: #334155; color: #94A3B8;" onclick="toggle('rp2')">Get Dialogue Starters <span>▼</span></button>
-                <div id="rp2" class="hidden-content" style="background: #1E293B; color: #D1D5DB; border: 1px solid #334155;">
-                    • "I value our relationship, but I need to be honest with you about something..."<br>
-                    • "I’ve been feeling a bit overwhelmed lately, and I need to start saying 'no' to favors."<br>
-                    • "I didn't realize I was putting so much pressure on you. I'm sorry."<br>
-                    • "Can we find a better way to support each other without crossing these lines?"
+                    • "To be honest, I was really hurt, but I’m glad you reached out. How have you been?"
                 </div>
             </div>
         </section>
 
-        <!-- 5. FLUENCY BUILDER -->
+        <!-- 5. FLUENCY BUILDER - UPDATED CARDS -->
         <section id="s5">
             <div class="section-num">5</div>
             <h2>Fluency Builder ⚡</h2>
-            <p style="margin-bottom: 30px; color: var(--text-muted);">Tap a card to see how to expand your thoughts naturally.</p>
+            <p style="margin-bottom: 40px; color: var(--text-muted);">Tap a card to reveal a natural way to expand your thoughts.</p>
             <div class="flash-grid">
                 <div class="flash-card" onclick="this.classList.toggle('active')">
-                    <div class="flash-front">"To be perfectly honest..."</div>
-                    <div class="flash-back">"...I find it quite challenging to trust new acquaintances immediately."</div>
+                    <div class="flash-face flash-front">"To be perfectly honest..."</div>
+                    <div class="flash-face flash-back">"...I find it quite challenging to trust new acquaintances immediately."</div>
                 </div>
                 <div class="flash-card" onclick="this.classList.toggle('active')">
-                    <div class="flash-front">"Generally speaking..."</div>
-                    <div class="flash-back">"...people in my country value long-term loyalty over brief passion."</div>
+                    <div class="flash-face flash-front">"Generally speaking..."</div>
+                    <div class="flash-face flash-back">"...people in my country value long-term loyalty over brief passion."</div>
                 </div>
                 <div class="flash-card" onclick="this.classList.toggle('active')">
-                    <div class="flash-front">"It reminds me of..."</div>
-                    <div class="flash-back">"...the time when my best friend moved abroad and we stayed in touch via video calls."</div>
+                    <div class="flash-face flash-front">"It reminds me of..."</div>
+                    <div class="flash-face flash-back">"...the time when my best friend moved abroad and we stayed in touch via monthly video calls."</div>
                 </div>
                 <div class="flash-card" onclick="this.classList.toggle('active')">
-                    <div class="flash-front">"One significant reason..."</div>
-                    <div class="flash-back">"...for this trend is the influence of digital media on our self-perception."</div>
+                    <div class="flash-face flash-front">"One significant reason..."</div>
+                    <div class="flash-face flash-back">"...for this trend is the influence of digital media on our self-perception."</div>
                 </div>
                 <div class="flash-card" onclick="this.classList.toggle('active')">
-                    <div class="flash-front">"From my perspective..."</div>
-                    <div class="flash-back">"...finding a soulmate requires both patience and timing."</div>
+                    <div class="flash-face flash-front">"From my perspective..."</div>
+                    <div class="flash-face flash-back">"...finding a soulmate requires both patience and perfect timing."</div>
                 </div>
                 <div class="flash-card" onclick="this.classList.toggle('active')">
-                    <div class="flash-front">"As far as I'm concerned..."</div>
-                    <div class="flash-back">"...trust is the most difficult thing to rebuild once it's broken."</div>
-                </div>
-                <div class="flash-card" onclick="this.classList.toggle('active')">
-                    <div class="flash-front">"Having said that..."</div>
-                    <div class="flash-back">"...online dating is still a great way for busy professionals to socialize."</div>
-                </div>
-                <div class="flash-card" onclick="this.classList.toggle('active')">
-                    <div class="flash-front">"In the long run..."</div>
-                    <div class="flash-back">"...shared values are more important than physical attraction."</div>
-                </div>
-                <div class="flash-card" onclick="this.classList.toggle('active')">
-                    <div class="flash-front">"I'm of the mind that..."</div>
-                    <div class="flash-back">"...we should be more cautious about who we call a 'best friend'."</div>
-                </div>
-                <div class="flash-card" onclick="this.classList.toggle('active')">
-                    <div class="flash-front">"For instance..."</div>
-                    <div class="flash-back">"...my confidant always knows when I'm stressed before I even say it."</div>
+                    <div class="flash-face flash-front">"As far as I'm concerned..."</div>
+                    <div class="flash-face flash-back">"...trust is the most difficult thing to rebuild once it's been broken."</div>
                 </div>
             </div>
         </section>
@@ -459,27 +379,31 @@
             <div class="section-num">6</div>
             <h2>Review: Vocabulary Match 🎯</h2>
             <div class="card">
+                <p style="margin-bottom: 25px; color: var(--text-muted);">Choose the correct word for each definition. Get instant feedback!</p>
+                
                 <div class="game-row">
                     <span class="game-q">1. Someone you share your deepest secrets with.</span>
-                    <select class="game-select" onchange="check(this, 'confidant')">
+                    <select class="game-select" onchange="checkMatch(this, 'confidant')">
                         <option value="">Choose word...</option>
                         <option value="amiable">Amiable</option>
                         <option value="confidant">Confidant</option>
                         <option value="drift">Drift apart</option>
                     </select>
                 </div>
+
                 <div class="game-row">
                     <span class="game-q">2. To gradually lose closeness with a friend.</span>
-                    <select class="game-select" onchange="check(this, 'drift')">
+                    <select class="game-select" onchange="checkMatch(this, 'drift')">
                         <option value="">Choose word...</option>
                         <option value="amiable">Amiable</option>
                         <option value="confidant">Confidant</option>
                         <option value="drift">Drift apart</option>
                     </select>
                 </div>
+
                 <div class="game-row">
                     <span class="game-q">3. A very friendly and pleasant individual.</span>
-                    <select class="game-select" onchange="check(this, 'amiable')">
+                    <select class="game-select" onchange="checkMatch(this, 'amiable')">
                         <option value="">Choose word...</option>
                         <option value="amiable">Amiable</option>
                         <option value="confidant">Confidant</option>
@@ -498,7 +422,7 @@
                 <label class="check-item"><input type="checkbox" onclick="updateProgress()"> I spoke for more than 1 minute on the opinion questions.</label>
                 <label class="check-item"><input type="checkbox" onclick="updateProgress()"> I actively listened and responded to my partner's points.</label>
                 <label class="check-item"><input type="checkbox" onclick="updateProgress()"> I used a "sentence starter" to expand my ideas naturally.</label>
-                <label class="check-item"><input type="checkbox" onclick="updateProgress()"> I feel more confident discussing deep connections.</label>
+                <label class="check-item"><input type="checkbox" onclick="updateProgress()"> I feel more confident discussing human connections.</label>
                 
                 <div id="victory-msg" style="display: none; text-align: center; margin-top: 40px; font-weight: 800; color: var(--primary); font-size: 2.5rem; animation: fadeIn 0.8s ease;">
                     🌟 EXCELLENT WORK! 🌟
@@ -519,11 +443,17 @@
             el.style.display = isVisible ? 'none' : 'block';
         }
 
-        function check(sel, correct) {
+        function checkMatch(sel, correct) {
+            sel.classList.remove('correct-select', 'wrong-select');
+            if (sel.value === "") return;
+
             if (sel.value === correct) {
-                sel.classList.add('correct');
+                sel.classList.add('correct-select');
             } else {
-                sel.classList.remove('correct');
+                sel.classList.add('wrong-select');
+                setTimeout(() => {
+                    sel.classList.remove('wrong-select');
+                }, 400);
             }
         }
 
